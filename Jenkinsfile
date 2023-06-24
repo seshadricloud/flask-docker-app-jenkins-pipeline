@@ -27,20 +27,33 @@ pipeline {
                 echo "Image built and pushed to repository"
             }
         }
-        stage('Deploy') {
-            steps {
-                script{
-                    //sh 'BUILD_NUMBER = ${BUILD_NUMBER}'
-                    if (BUILD_NUMBER == "1") {
-                        sh 'sudo docker run --name $CONTAINER_NAME -d -p 5000:5000 $DOCKER_HUB_REPO'
-                    }
-                    else {
-                        sh 'sudo docker stop $CONTAINER_NAME'
-                        sh 'sudo docker rm $CONTAINER_NAME'
-                        sh 'sudo docker run --name $CONTAINER_NAME -d -p 5000:5000 $DOCKER_HUB_REPO'
-                    }
-                    //sh 'echo "Latest image/code deployed"'
-                }
+//         stage('Deploy') {
+//             steps {
+//                 script{
+//                     //sh 'BUILD_NUMBER = ${BUILD_NUMBER}'
+//                     if (BUILD_NUMBER == "1") {
+//                         sh 'sudo docker run --name $CONTAINER_NAME -d -p 5000:5000 $DOCKER_HUB_REPO'
+//                     }
+//                     else {
+//                         sh 'sudo docker stop $CONTAINER_NAME'
+//                         sh 'sudo docker rm $CONTAINER_NAME'
+//                         sh 'sudo docker run --name $CONTAINER_NAME -d -p 5000:5000 $DOCKER_HUB_REPO'
+//                     }
+//                     //sh 'echo "Latest image/code deployed"'
+//                 }
+//             }
+//         }
+//     }
+// }
+stage('Deploy') {
+    steps {
+        script {
+            if (BUILD_NUMBER == "1" || !sh(returnStdout: true, script: "sudo docker ps -a | grep $CONTAINER_NAME").trim()) {
+                sh "sudo docker run --name $CONTAINER_NAME -d -p 5000:5000 $DOCKER_HUB_REPO"
+            } else {
+                sh "sudo docker stop $CONTAINER_NAME"
+                sh "sudo docker rm $CONTAINER_NAME"
+                sh "sudo docker run --name $CONTAINER_NAME -d -p 5000:5000 $DOCKER_HUB_REPO"
             }
         }
     }
