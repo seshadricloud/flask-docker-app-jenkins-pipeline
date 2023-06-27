@@ -22,7 +22,7 @@ pipeline {
             steps {
                 script {
                     sh 'sudo docker rm -f $CONTAINER_NAME || true'
-                    sh 'sudo docker run --name $CONTAINER_NAME -d -p 5000:5000 my-flask-app'
+                    sh 'sudo docker run --name $CONTAINER_NAME -d -p 8000:5000 my-flask-app'
                 }
             }
         }
