@@ -7,6 +7,8 @@ app = Flask(__name__)
 # Enable debug mode
 app.debug = True
 
+print("Debug mode:", app.debug)  # Add this line to check the debug mode value
+
 @app.route('/')
 def hello():
     return 'Welcome to the Application with updated code!'
@@ -18,3 +20,4 @@ def stub():
 
 if __name__ == '__main__':
     app.run()
+
